@@ -1,34 +1,28 @@
 # Utilizando função para debugar trechos de código
 
 # ------------------------------- VARIÁVEIS ----------------------------------------- #
-USUARIOS=$(cat /etc/passwd | cut -d : -f 1)
-MENSAGEM_USO="
-  $0 - [OPÇÕES]
+FLAG_DEBUG=0
+NIVEL_DEBUG=0
+# ------------------------------- Funções ------------------------------------------- #
 
-    -h - Menu de ajuda
-    -v - Versão
-    -s - Ordernar a saída
-    -m - Coloca em maiúsculo
-"
-VERSAO="v1.0"
-FLAG_ORDENA=0
+Debug () {
+  [ $1 -le $NIVEL_DEBUG ] && echo "Debug $* ------"
+}
+
+Soma () {
+  local total=0
+  for i in $(seq 1 25); do
+    Debug 1 "Entrei no for com valor: $i"
+    total=$((total + i))
+    Debug 2 "Soma: $i"
+  done;
+  echo $total
+}
 
 # ------------------------------- EXECUÇÃO ----------------------------------------- #
-set -x
-while test -n "$1"
-do
-  case "$1" in
-    -h) echo "$MENSAGEM_USO"  && exit 0 ;;
-    -v) echo "$VERSAO"        && exit 0 ;;
-    -s) FLAG_ORDENA=1                   ;;
-    -m) FLAG_MAIUSCULO=1                ;;
-     *) echo "Opção invalida" && exit 1 ;;
-  esac
-  shift
-done
+case "$1" in
+  -d) [ $2 ] && NIVEL_DEBUG=$2 ;;
+  *)  Soma
+esac
 
-[ $FLAG_ORDENA -eq 1 ] && USUARIOS=$(echo "$USUARIOS" | sort)
-[ $FLAG_MAIUSCULO -eq 1 ] && USUARIOS=$(echo "$USUARIOS" | tr [a-z] [A-Z])
-
-echo "$USUARIOS"
-set +x
+Soma
