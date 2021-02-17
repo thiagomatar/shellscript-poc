@@ -1,3 +1,6 @@
+# Para debugar usando bash debug no codigo devemos inserir set -x no inicio
+# do bloco e set +x no final do bloco
+
 # ------------------------------- VARIÁVEIS ----------------------------------------- #
 USUARIOS=$(cat /etc/passwd | cut -d : -f 1)
 MENSAGEM_USO="
